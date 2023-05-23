@@ -2,34 +2,34 @@ import { Request, Response } from "express";
 import { ResponseModel } from "../business/models/response.model";
 import { MongoService } from "../business/services/mongo.service";
 
-const collection = "users"
+const collection = "objects"
 
-export const getUsers = async (req: Request, res: Response) => {
+export const getObjects = async (req: Request, res: Response) => {
     const responseModel = new ResponseModel(true, "Consulta exitosa", [])
     try {
         const service = new MongoService()
-        const users: any[] = await service.getItems(collection)
-        responseModel.info = users
+        const Objects: any[] = await service.getItems(collection)
+        responseModel.info = Objects
         return res.send(responseModel)
     } catch (error) {
         console.log(error);
         responseModel.ok = false
-        responseModel.message = "Error al consultar usuarios"
+        responseModel.message = "Error al consultar objetos"
         return res.send(responseModel)
     }
 }
 
-export const getOneUser = (req: Request, res: Response) => {
-    return res.send("GET ONE User")
+export const getOneObject = (req: Request, res: Response) => {
+    return res.send("GET ONE Object")
 }
 
-export const createUser = async (req: Request, res: Response) => {
+export const createObject = async (req: Request, res: Response) => {
     const responseModel = new ResponseModel(true, "Creación exitosa", [])
     try {
-        const user = req.body
+        const Object = req.body
         const service = new MongoService()
-        if (user) {
-            const response = await service.insertItem(collection, user)
+        if (Object) {
+            const response = await service.insertItem(collection, Object)
             responseModel.info = response
             return res.send(responseModel)
         } else {
@@ -40,19 +40,19 @@ export const createUser = async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error);
         responseModel.ok = false
-        responseModel.message = "Error al crear usuario"
+        responseModel.message = "Error al crear objeto"
         return res.send(responseModel)
     }
 }
 
-export const updateUser = async (req: Request, res: Response) => {
+export const updateObject = async (req: Request, res: Response) => {
     const responseModel = new ResponseModel(true, "Creación exitosa", [])
     try {
-        const user = req.body
+        const Object = req.body
         const { id } = req.params
         const service = new MongoService()
-        if (user) {
-            const response = await service.updateItem(collection, user, id)
+        if (Object) {
+            const response = await service.updateItem(collection, Object, id)
             responseModel.info = response
             return res.send(responseModel)
         } else {
@@ -63,12 +63,12 @@ export const updateUser = async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error);
         responseModel.ok = false
-        responseModel.message = "Error al modificar un usuario"
+        responseModel.message = "Error al modificar un objeto"
         return res.send(responseModel)
     }
 }
 
-export const deleteUser = async (req: Request, res: Response) => {
+export const deleteObject = async (req: Request, res: Response) => {
     const responseModel = new ResponseModel(true, "Creación exitosa", [])
     try {
         const { id } = req.params
@@ -79,7 +79,7 @@ export const deleteUser = async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error);
         responseModel.ok = false
-        responseModel.message = "Error al modificar un usuario"
+        responseModel.message = "Error al modificar un objeto"
         return res.send(responseModel)
     }
 }
