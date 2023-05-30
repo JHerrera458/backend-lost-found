@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
 import { ResponseModel } from "../business/models/response.model";
 import { MongoService } from "../business/services/mongo.service";
+import { BCrypt } from "../business/services/bcrypt.service";
 
 const collection = "users"
+const bcrypt = new BCrypt()
 
 export const getUsers = async (req: Request, res: Response) => {
     const responseModel = new ResponseModel(true, "Consulta exitosa", [])
@@ -27,6 +29,12 @@ export const createUser = async (req: Request, res: Response) => {
     const responseModel = new ResponseModel(true, "Creación exitosa", [])
     try {
         const user = req.body
+        const passHash = bcrypt.createHash(user.password)
+        user.password = passHash
+
+        const userInfo = {...user}
+        delete userInfo.password
+
         const service = new MongoService()
         if (user) {
             const response = await service.insertItem(collection, user)
@@ -40,8 +48,8 @@ export const createUser = async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error);
         responseModel.ok = false
-        responseModel.message = "Error al crear usuario"
-        return res.send(responseModel)
+        responseModel.message = "Faltan campos obligatorios"
+        return res.status(400).send(responseModel)
     }
 }
 
