@@ -3,9 +3,11 @@ import cors from "cors"
 import userRouter from "./routers/users.router";
 import objectRouter from "./routers/objects.router";
 import authRouter from "./routers/auth.router";
+import { setConfig } from "./config/settings";
 
 const app: Express = AppExpress()
 const PORT: number = 3001
+setConfig()
 
 app.use(cors())
 app.use(AppExpress.json())

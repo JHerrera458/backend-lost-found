@@ -4,7 +4,7 @@ export class MongoService {
     private connectionString: string
     private database: string
     constructor() {
-        this.connectionString = "mongodb+srv://JHerrera458:NMRmPJptvUcZ63uL@jherrera458.ddqobzx.mongodb.net/apiLostFound"
+        this.connectionString = process.env.CONNECTION_STRING
         this.database = "apiLostFound"
     }
 
@@ -58,6 +58,18 @@ export class MongoService {
             const itemId = new ObjectId(id)
             const response = await collection.deleteOne({ _id: itemId })
             return response
+        } finally {
+            await client.close()
+        }
+    }
+
+    async getUserByCredentials(collectionName: string, email: string, password: string) {
+        const client = this.connectionDb()
+        try {
+            const db = client.db(this.database)
+            const collection = db.collection(collectionName)
+            const items = await collection.findOne({ email: email, password: password })
+            return items
         } finally {
             await client.close()
         }
